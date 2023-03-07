@@ -1,17 +1,17 @@
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static io.restassured.RestAssured.get;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Test_GET_StatusCode extends BaseTest {
 
@@ -36,15 +36,6 @@ public class Test_GET_StatusCode extends BaseTest {
         return records.toArray(new Object[0][0]);
     }
 
-    @DataProvider(name = "validPeselsList")
-    public static Object[][] dpMethod(){
-        return new Object[][]{
-                {"55100834217", "a"},
-                {"69472901572", "b"},
-                {"87281474670", "c"},
-                {"80222980203", "d"}
-        };
-    }
 
 // CODE 200 - 3 ways of testing
 
@@ -53,14 +44,39 @@ public class Test_GET_StatusCode extends BaseTest {
         String peselValid = "37010865884";
         Response response = get("/Pesel?pesel=" + peselValid);
         Assert.assertEquals(response.statusCode(),200);
+        Assert.assertEquals(response.body(),"");
     }
 
-    @Test (dataProvider = "validPeselsList")
-    public void testGetRequest_ResponseStatusOK_Code200_DP(String pesel, String comment){
+    @Test (dataProvider = "valid", dataProviderClass = DPClass.class)
+    public void testGetRequest_ResponseStatusOK_Code200_DP(String pesel, String expectedGender, String expectedDate){
 
         Response response = get("/Pesel?pesel=" + pesel);
-//        System.out.println(pesel + " "+ comment); // uncomment if needed
+        boolean isValid = response.path("isValid");
+        String actualGender = response.path("gender");
+        String actualDateFull = response.path("dateOfBirth"); //T00:00:00
+        String actualDate = actualDateFull.substring(0,actualDateFull.length()-9); // removed hour
+//          when pesel is valid:  "errors": []
+        List<Object> errors = response.path("errors");
+        boolean errorsIsEmpty = errors.isEmpty();
+
         Assert.assertEquals(response.statusCode(),200);
+        Assert.assertTrue(isValid);
+        Assert.assertEquals(actualGender, expectedGender);
+        Assert.assertEquals(actualDate, expectedDate);
+        Assert.assertTrue(errorsIsEmpty);
+        if (errorsIsEmpty){
+            System.out.println(pesel+" error list is empty " + actualDate + " " + actualGender);
+        }
+
+        //2nd version of veryfing that list of errors is empty
+        List<Object> errors2 = response.path("errors");
+        try {
+            assertThat(errors2, Matchers.empty());
+            System.out.println(pesel + " no errors");
+        } catch (AssertionError e) {
+            System.out.println(pesel + " has errors");
+        }
+
     }
 
 
