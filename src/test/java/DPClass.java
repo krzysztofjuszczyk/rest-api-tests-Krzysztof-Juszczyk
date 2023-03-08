@@ -5,11 +5,11 @@ import java.util.Random;
 
 public class DPClass {
     @DataProvider(name = "validPeselsList")
-    public static Object[][] valid(){
+    public static Object[][] valid() {
         return new Object[][]{
                 //random values
                 {"55100834217", "Male", "1955-10-08"},
-                {"69472901572", "Male" ,"2169-07-29"},
+                {"69472901572", "Male", "2169-07-29"},
                 {"87281474670", "Male", "2087-08-14"},
                 {"80222980203", "Female", "2080-02-29"},
 
@@ -43,11 +43,19 @@ public class DPClass {
                 {"99723140676", "Male", "2299-12-31"},
                 {"99723115948", "Female", "2299-12-31"},
 
+                // leap years valid
+
+                {"04822999490", "Male", "1804-02-29"}, // first leap year
+                {"16222942691", "Male", "2016-02-29"},
+                {"16222959905", "Female", "2016-02-29"},
+                {"00222999715", "Male", "2000-02-29"},
+                {"00222981943", "Female", "2000-02-29"},
+                {"96622958014", "Male", "2296-02-29"}, // last leap year
         };
     }
 
     @DataProvider(name = "invalidPeselsList_Length")
-    public static Object[][] dpMethod1(){
+    public static Object[][] dpMethod1() {
         return new Object[][]{
                 {"5510083427", "length 10"},
                 {"694729012", "length 9"},
@@ -66,28 +74,28 @@ public class DPClass {
 
     // automatically generates random control number on the database of correct pesel numbers
     @DataProvider(name = "invalidPesel_InvalidControlNumber_GeneratedAutomaticallyFromValid")
-    public static Object[][] dpGenerate(){
+    public static Object[][] dpGenerate() {
         Object[][] objects = valid();
-        for (Object[] object:
-             objects) {
+        for (Object[] object :
+                objects) {
             Random random = new Random();
-                String currentNumber = (String) object[0];
+            String currentNumber = (String) object[0];
 
-                StringBuilder sb = new StringBuilder(currentNumber);
-                char lastChar = sb.charAt(10);
-                int randomDigit = Character.getNumericValue(lastChar);
-                while (randomDigit == Character.getNumericValue(lastChar)) {
-                    randomDigit = random.nextInt(10);
-                }
-
-                sb.setCharAt(10, Character.forDigit(randomDigit, 10));
-                object[0] = sb.toString();
+            StringBuilder sb = new StringBuilder(currentNumber);
+            char lastChar = sb.charAt(10);
+            int randomDigit = Character.getNumericValue(lastChar);
+            while (randomDigit == Character.getNumericValue(lastChar)) {
+                randomDigit = random.nextInt(10);
             }
+
+            sb.setCharAt(10, Character.forDigit(randomDigit, 10));
+            object[0] = sb.toString();
+        }
         return objects;
     }
 
     @DataProvider(name = "invalidPesel_InvalidControlNumber")
-    public static Object[][] dpMethod2(){
+    public static Object[][] dpMethod2() {
         return new Object[][]{
                 // correct control number -1 or +1
                 {"55100834216", "-1"},
@@ -101,29 +109,158 @@ public class DPClass {
         };
     }
 
-    @DataProvider (name = "invalidCharacters")
-    public static Object[][] invalidChars(){
+    @DataProvider(name = "invalidCharacters")
+    public static Object[][] invalidChars() {
         return new Object[][]{
-                {"!@#$%^&*())","all chars inv"},
+                {"!@#$%^&*())", "all chars inv"},
                 {"@@@@@@@@@@@", "all chars inv and the same"},
                 {"0081010169@", "last char inv"},
                 {"!0810101690", "first char inv"},
                 {"997231*0676", "inv char in the middle"},
                 {"99@23140676", "inv char in the middle"},
 
+                // chars from the top row of keyboard
+                {"`0210157679", "'"},
+                {"0`210180589", "'"},
+                {"9932319873`", "'"},
+                {"~9323155627", "~"},
+                {"9~323155627", "~"},
+                {"9932315562~", "~"},
+                {"!0210157679", "!"},
+                {"0!210180589", "!"},
+                {"9932319873!", "!"},
+                {"@9323155627", "@"},
+                {"0@210157679", "@"},
+                {"0021018058@", "@"},
+                {"#9323198738", "#"},
+                {"9#323155627", "#"},
+                {"0021015767#", "#"},
+                {"$0210180589", "$"},
+                {"9$323198738", "$"},
+                {"9932315562$", "$"},
+                {"%0210157679", "%"},
+                {"0%210180589", "%"},
+                {"9932319873%", "%"},
+                {"^9323155627", "^"},
+                {"0^210157679", "^"},
+                {"0021018058^", "^"},
+                {"&9323198738", "&"},
+                {"9&323155627", "&"},
+                {"0021015767&", "&"},
+                {"*0210180589", "*"},
+                {"9*323198738", "*"},
+                {"9932315562*", "*"},
+                {"(0210157679", "("},
+                {"0(210180589", "("},
+                {"9932319873(", "("},
+                {")9323155627", ")"},
+                {"0)210157679", ")"},
+                {"0021018058)", ")"},
+                {"-0210157679", "-"},
+                {"0-210180589", "-"},
+                {"9932319873-", "-"},
+                {"_9323155627", "_"},
+                {"0_210157679", "_"},
+                {"0021018058_", "_"},
+                {"+9323198738", "+"},
+                {"9+323155627", "+"},
+                {"9932319873+", "+"},
+                {"=9323155627", "="},
+                {"0=210157679", "="},
+                {"0021018058=", "="},
+                {"{9323198738", "{"},
+                {"9{323155627", "{"},
+                {"9932319873{", "{"},
+                {"[9323198738", "["},
+                {"9[323155627", "["},
+                {"9932319873[", "["},
+                {"}9323198738", "}"},
+                {"9}323155627", "}"},
+                {"9932319873}", "}"},
+                {"]9323198738", "]"},
+                {"9]323155627", "]"},
+                {"9932319873]", "]"},
+                {"|9323155627", "|"},
+                {"0|210157679", "|"},
+                {"0021018058|", "|"},
+                {":9323155627", ":"},
+                {"0:210157679", ":"},
+                {"0021018058:", ":"},
+                {";9323155627", ";"},
+                {"0;210157679", ";"},
+                {"0021018058;", ";"},
+                {"'9323155627", "'"},
+                {"0'210157679", "'"},
+                {"0021018058'", "'"},
+                {"<9323155627", "<"},
+                {"0<210157679", "<"},
+                {"0021018058<", "<"},
+                {",9323155627", ","},
+                {"0,210157679", ","},
+                {"0021018058,", ","},
+                {">9323155627", ">"},
+                {"0>210157679", ">"},
+                {"0021018058>", ">"},
+                {".9323155627", "."},
+                {"0.210157679", "."},
+                {"0021018058.", "."},
+                {"?9323155627", "?"},
+                {"0?210157679", "?"},
+                {"0021018058?", "?"},
+                {"/9323155627", "/"},
+                {"0/210157679", "/"},
+                {"0021018058/", "/"},
+
+
                 // tests fail
-                {"9972&140676", "inv char in the middle"},
-                {"&&&&&&&&&&&", "inv char in the middle"},
-                {"&&100834217", "inv char in the middle"},
-                {"5&100834217", "inv char in the middle"},
-                {"55&00834217", "inv char in the middle"},
-                {"551&0834217", "inv char in the middle"},
-                {"5510&834217", "inv char in the middle"},
-                {"55100&34217", "inv char in the middle"},
-                {"551008&4217", "inv char in the middle"},
-                {"5510083&217", "inv char in the middle"},
-                {"55100834&17", "inv char in the middle"},
-                {"551008342&7", "inv char in the middle"},
-                {"5510083421&", "inv char in the middle"}        };
+                {"&&&&&&&&&&&", "&"},
+                {"&&100834217", "&&"},
+                {"5&100834217", "&"},
+                {"55&00834217", "&"},
+                {"551&0834217", "&"},
+                {"5510&834217", "&"},
+                {"55100&34217", "&"},
+                {"551008&4217", "&"},
+                {"5510083&217", "&"},
+                {"55100834&17", "&"},
+                {"551008342&7", "&"},
+                {"5510083421&", "&"}};
+    }
+
+    // invaild values as 3&4 pesel digit
+    @DataProvider(name = "invalidYearAndMonth")
+    public static Object[][] dpMethodYearAndMonth() {
+        return new Object[][]{
+                {"55130834217", "XX-XX-08"},
+                {"55200834217", "XX-XX-08"},
+                {"55330834217", "XX-XX-08"},
+                {"55400834217", "XX-XX-08"},
+                {"55530834217", "XX-XX-08"},
+                {"55600834217", "XX-XX-08"},
+                {"55730834217", "XX-XX-08"},
+                {"55800834217", "XX-XX-08"},
+                {"55930834217", "XX-XX-08"},
+                {"55990834217", "XX-XX-08"},
+                {"55000834217", "XX-XX-08"},
+
+        };
+    }
+
+    @DataProvider(name = "invalidDay")
+    public static Object[][] dpMethodDay() {
+        return new Object[][]{
+                {"55100034217", "00"},
+                {"55103234217", "32"},
+                {"55109934217", "99"},
+
+                {"00810014115", "1800-01-00"},
+                {"00813214115", "1800-01-32"},
+                {"99720080029", "2299-12-00"},
+                {"99723280029", "2299-12-32"},
+
+                {"00822996850", "1800-02-29"}, // it is a non leap year
+                {"00022951385", "1900-02-29"}, // it is a non leap year
+
+        };
     }
 }
