@@ -41,15 +41,16 @@ public class Test_GET_StatusCode extends BaseTest {
     public void testGetRequest_ResponseStatusOK_Code200() {
         String peselValid = "37010865884";
         Response response = get("/Pesel?pesel=" + peselValid);
+        String actualBody = response.getBody().asString();
         Assert.assertEquals(response.statusCode(), 200);
-        Assert.assertEquals(response.body(), "");
+        Assert.assertTrue(actualBody.contains("isValid") && actualBody.contains("true"));
     }
 
     @Test(dataProvider = "valid", dataProviderClass = DPClass.class)
     public void testGetRequest_ResponseStatusOK_Code200_DP(String pesel, String expectedGender, String expectedDate) {
 
         Response response = get("/Pesel?pesel=" + pesel);
-        boolean isValid = response.path("isValid");
+        boolean actualIsValid = response.path("isValid");
         String actualGender = response.path("gender");
         String actualDateFull = response.path("dateOfBirth"); //T00:00:00
         String actualDate = actualDateFull.substring(0, actualDateFull.length() - 9); // removed hour
@@ -58,7 +59,7 @@ public class Test_GET_StatusCode extends BaseTest {
         boolean errorsIsEmpty = errors.isEmpty();
 
         Assert.assertEquals(response.statusCode(), 200);
-        Assert.assertTrue(isValid);
+        Assert.assertTrue(actualIsValid);
         Assert.assertEquals(actualGender, expectedGender);
         Assert.assertEquals(actualDate, expectedDate);
         Assert.assertTrue(errorsIsEmpty);
@@ -78,10 +79,9 @@ public class Test_GET_StatusCode extends BaseTest {
     }
 
     @Test(dataProvider = "validPeselsFromFile")
-    public void testGetRequest_ResponseStatusOK_Code200_FromFile(String pesel, String notUsed) {
-// I don't know how to use String[] in DataProviders
+    public void testGetRequest_ResponseStatusOK_Code200_FromFile(String pesel, String comment) {
         Response response = get("/Pesel?pesel=" + pesel);
-        System.out.println(pesel);  // for testing
+//        System.out.println(pesel);  // for testing
         Assert.assertEquals(response.statusCode(), 200);
     }
 
