@@ -2,6 +2,9 @@
 # RestAssured - TestNG -Java- Automated testing
 A Maven project using RestAssured and TestNG frameworks.
 
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+
+
 ## Providing test data
 
 The project uses methods with data entered manuall as well as DataProviders.
